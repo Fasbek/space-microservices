@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.spaceData.moonsmicroservice.models.BeanMoon;
 import com.spaceData.moonsmicroservice.models.dto.DtoMoon;
 import com.spaceData.moonsmicroservice.service.MoonService;
 
@@ -31,13 +32,32 @@ public class MoonController {
 	}
 	
 	@GetMapping("{id}")
-	public ResponseEntity<DtoMoon> obtenerDto(@PathVariable String id){
-		DtoMoon moon = moonService.getMoonById(id);
+	public ResponseEntity<List<DtoMoon>> listarLunasPorPlaneta(@PathVariable String id){
+		List<DtoMoon> moons = moonService.getMoonById(id);
+		if(moons.isEmpty()) {
+			return ResponseEntity.noContent().build();
+		}
+		return ResponseEntity.ok(moons);
+	}
+	
+	@GetMapping("/{id}/{name}")
+	public ResponseEntity<DtoMoon> obtenerDto(@PathVariable String id, @PathVariable String name){
+		DtoMoon moon = moonService.getMoonById(id, name);
 		if(moon == null) {
 			return ResponseEntity.noContent().build();
 		}
 		return ResponseEntity.ok(moon);
 	}
+	
+//	@GetMapping("{id}")
+//	public ResponseEntity<List<DtoMoon>> obtenerDto(@PathVariable String id){
+//		List<DtoMoon> moons = moonService.getMoonById(id);
+//		if(moon == null) {
+//			return ResponseEntity.noContent().build();
+//		}
+//		return ResponseEntity.ok(moon);
+//	}
+	
 	
 	@PutMapping("/guardardto")
 	public ResponseEntity<DtoMoon> guardarDto(@RequestBody DtoMoon dto){

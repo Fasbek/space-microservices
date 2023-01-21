@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.spaceData.spacemicroservice.repository.OurSolarSystemRepository;
+import com.spaceData.spacemicroservice.clients.MoonClient;
 import com.spaceData.spacemicroservice.models.OurSolarSystemPlanet;
+import com.spaceData.spacemicroservice.models.Dto.DtoMoon;
 
 @Service
 public class OurSolarSystemService {
@@ -14,12 +16,20 @@ public class OurSolarSystemService {
 	@Autowired
 	private OurSolarSystemRepository ourSolarSystemRepository; 
 	
+	@Autowired
+	private MoonClient moonClient;
+	
 	public List<OurSolarSystemPlanet> getAll(){
 		return ourSolarSystemRepository.findAll();
 	}
 	
 	public OurSolarSystemPlanet getPlanetById(String id) {
-		return ourSolarSystemRepository.findById(id).orElse(null);
+		OurSolarSystemPlanet planet = ourSolarSystemRepository.findById(id).orElse(null);
+		if(planet != null) {
+			List<DtoMoon> lunas = moonClient.listarLunasPorPlaneta(id).getBody();
+			planet.setListaMoons(lunas);
+		}
+		return planet;
 	}
 	
 	public OurSolarSystemPlanet guardarDto(OurSolarSystemPlanet dto) {

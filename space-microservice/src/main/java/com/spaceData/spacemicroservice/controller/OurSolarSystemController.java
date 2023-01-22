@@ -50,6 +50,6 @@ public class OurSolarSystemController {
 	}
 	
 	private ResponseEntity<OurSolarSystemPlanet> fallBackGetMoons(@PathVariable("id") String id, RuntimeException e){
-		return new ResponseEntity("El planeta no tiene lunas registradas.", HttpStatus.OK);
+		return new ResponseEntity("El planeta no puede mostrar por el momento sus lunas o no tiene.", HttpStatus.OK);
 	}
 }
